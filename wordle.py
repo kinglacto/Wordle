@@ -24,8 +24,8 @@ class Wordle:
 
         self.grey = (77, 83, 84)
         self.dark_grey = (55, 55, 55)
-        self.green = (109, 207, 65)
-        self.yellow = (217, 226, 45)
+        self.green = (21, 189, 29)
+        self.yellow = (165, 175, 15)
         self.white = (200, 200, 200)
 
     def draw_grid(self) -> None:
