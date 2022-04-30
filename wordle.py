@@ -21,7 +21,6 @@ class Wordle:
         self.grid = [[[] for _ in range(5)] for __ in range(5)]
 
         self.myfont = pygame.font.SysFont('helvetica', 70)
-
         self.grey = (77, 83, 84)
         self.dark_grey = (55, 55, 55)
         self.green = (21, 189, 29)
