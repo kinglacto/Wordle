@@ -6,8 +6,7 @@ import sys
 pygame.font.init()
 
 with open('words.json', 'r') as words_file:
-    WORDS_LIST = list(json.load(words_file))
-    WORDS_SET = set(WORDS_LIST)
+    WORDS_DIC = json.load(words_file)
 
 class Wordle:
     def __init__(self) -> None:
@@ -27,6 +26,14 @@ class Wordle:
         self.yellow = (165, 175, 15)
         self.white = (200, 200, 200)
 
+        self.two_letter_combinations = list(WORDS_DIC.keys())
+
+    def select_random_word(self) -> str:
+        return random.choice(WORDS_DIC[random.choice(self.two_letter_combinations)])
+
+    def is_valid_word(self, word) -> bool:
+        return word in WORDS_DIC[word[0:2]]
+
     def draw_grid(self) -> None:
         self.screen.fill((0, 0, 0))
         for i in range(5):
@@ -43,7 +50,7 @@ class Wordle:
         guessed = ''
         for j in range(5):
             guessed += self.grid[line][j]
-        if guessed in WORDS_SET:
+        if self.is_valid_word(guessed):
             green = []
             non_green = []
             green_indices = []
@@ -84,7 +91,7 @@ class Wordle:
             self.j = -1
         
     def run_game(self) -> None:
-        self.word = list(random.choice(WORDS_LIST))
+        self.word = list(self.select_random_word())
         self.draw_grid()
         pygame.display.update()
 
@@ -117,7 +124,7 @@ class Wordle:
 
                         elif not self.grid[self.i][4] != []:
                             try:
-                                if ord(char) in range(97, 123) or ord(char) in range(65, 91):
+                                if ord(char) in range(97, 123):
                                     self.insert(char)
                                 else:
                                     continue
@@ -127,11 +134,11 @@ class Wordle:
                     elif game_over and event.key == pygame.K_RETURN:
                             self.i = 0
                             self.j = -1
-                            self.word = list(random.choice(WORDS_LIST))
+                            self.word = list(self.select_random_word())
                             self.draw_grid()
                             self.grid = [[[] for _ in range(5)] for __ in range(5)]
                             game_over = False
-                        
+
                     pygame.display.update()
             pygame.time.wait(30)
 
