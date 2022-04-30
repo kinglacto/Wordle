@@ -134,7 +134,7 @@ class Wordle:
                             game_over = False
                         
                     pygame.display.update()
-                pygame.time.wait(30)
+            pygame.time.wait(30)
 
 if __name__ == "__main__":
     wordle = Wordle()
