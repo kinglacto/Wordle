@@ -84,29 +84,12 @@ class Wordle:
         else:
             self.j = -1
         
-    def reset(self, show_word=False) -> None:
-        if show_word:
-            for i in range(5):
-                self.screen.blit(self.myfont.render(self.word[i], False, self.green), (70 + i * 75, 3))
-
-        pygame.display.update()
-        while True:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-
-                elif event.type == pygame.KEYUP and event.key == pygame.K_RETURN:
-                    self.word = list(random.choice(WORDS_LIST))
-                    self.draw_grid()
-                    return None
-                pygame.time.wait(30)
-        
-
     def run_game(self) -> None:
         self.word = list(random.choice(WORDS_LIST))
         self.draw_grid()
         pygame.display.update()
+
+        game_over = False
 
         while True:
             for event in pygame.event.get():
@@ -115,25 +98,40 @@ class Wordle:
                     sys.exit()
 
                 elif event.type == pygame.KEYUP:
-                    char = pygame.key.name(event.key)
-                    if event.key == pygame.K_BACKSPACE:
-                        self.remove()
+                    if not game_over:
+                        char = pygame.key.name(event.key)
+                        if event.key == pygame.K_BACKSPACE:
+                            self.remove()
 
-                    elif event.key == pygame.K_RETURN and self.grid[self.i][4] != []:
-                        if self.check_word(self.i):
-                            self.reset()
-
-                        if self.i == 4 and self.j == 4:
-                            self.reset(True)
-
-                    elif not self.grid[self.i][4] != []:
-                        try:
-                            if ord(char) in range(97, 123) or ord(char) in range(65, 91):
-                                self.insert(char)
-                            else:
+                        elif event.key == pygame.K_RETURN and self.grid[self.i][4] != []:
+                            if self.check_word(self.i):
+                                game_over = True
+                                pygame.display.update()
                                 continue
-                        except:
-                            continue
+
+                            if self.i == 5 and self.j == -1:
+                                game_over = True
+                                for i in range(5):
+                                    self.screen.blit(self.myfont.render(self.word[i], False, self.green), (70 + i * 75, 3))
+                                pygame.display.update()
+                                continue
+
+                        elif not self.grid[self.i][4] != []:
+                            try:
+                                if ord(char) in range(97, 123) or ord(char) in range(65, 91):
+                                    self.insert(char)
+                                else:
+                                    continue
+                            except:
+                                continue
+
+                    elif game_over and event.key == pygame.K_RETURN:
+                            self.i = 0
+                            self.j = -1
+                            self.word = list(random.choice(WORDS_LIST))
+                            self.draw_grid()
+                            self.grid = [[[] for _ in range(5)] for __ in range(5)]
+                            game_over = False
                         
                     pygame.display.update()
                 pygame.time.wait(30)
