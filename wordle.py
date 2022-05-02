@@ -13,6 +13,9 @@ class Wordle:
         self.screen = pygame.display.set_mode((500, 500))
         pygame.display.set_caption("Wordle")
 
+        self.clock = pygame.time.Clock()
+        self.FPS = 60
+
         self.i = 0
         self.j = -1
 
@@ -133,7 +136,7 @@ class Wordle:
                             game_over = False
 
                     pygame.display.update()
-            pygame.time.wait(30)
+            self.clock.tick(self.FPS)
 
 if __name__ == "__main__":
     wordle = Wordle()
