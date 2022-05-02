@@ -105,7 +105,6 @@ class Wordle:
 
                 elif event.type == pygame.KEYUP:
                     if not game_over:
-                        char = pygame.key.name(event.key)
                         if event.key == pygame.K_BACKSPACE:
                             self.remove()
 
@@ -122,14 +121,8 @@ class Wordle:
                                 pygame.display.update()
                                 continue
 
-                        elif not self.grid[self.i][4] != []:
-                            try:
-                                if ord(char) in range(97, 123):
-                                    self.insert(char)
-                                else:
-                                    continue
-                            except:
-                                continue
+                        elif (event.key >= pygame.K_a and event.key <= pygame.K_z) and not self.grid[self.i][4] != []:
+                            self.insert(chr(event.key))
 
                     elif game_over and event.key == pygame.K_RETURN:
                             self.i = 0
